@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
@@ -18,6 +19,6 @@ public class CreateUserRestModel {
     private String email;
     @NotBlank(message = "Phone number is a required field")
     private String phoneNumber;
-    @NotBlank(message = "User role is a required field")
+    @NotNull(message = "User role is a required field")
     private UserRole userRole;
 }

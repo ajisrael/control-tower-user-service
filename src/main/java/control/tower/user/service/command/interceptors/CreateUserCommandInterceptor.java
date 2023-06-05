@@ -34,13 +34,13 @@ public class CreateUserCommandInterceptor implements MessageDispatchInterceptor<
 
                 CreateUserCommand createUserCommand = (CreateUserCommand) command.getPayload();
 
-                UserLookupEntity userLookupEntity = userLookupRepository.findByUserId(
-                        createUserCommand.getUserId());
+                UserLookupEntity userLookupEntity = userLookupRepository.findByUserIdOrEmailOrPhoneNumber(
+                        createUserCommand.getUserId(), createUserCommand.getEmail(), createUserCommand.getPhoneNumber());
 
                 if (userLookupEntity != null) {
                     throw new IllegalStateException(
-                            String.format("User with id %s already exists",
-                                    createUserCommand.getUserId())
+                            String.format("User with id %s, email %s, or phone number %s, already exists",
+                                    createUserCommand.getUserId(), createUserCommand.getEmail(), createUserCommand.getPhoneNumber())
                     );
                 }
             }

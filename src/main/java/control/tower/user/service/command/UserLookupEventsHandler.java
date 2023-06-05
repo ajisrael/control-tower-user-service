@@ -17,6 +17,12 @@ public class UserLookupEventsHandler {
 
     @EventHandler
     public void on(UserCreatedEvent event) {
-        userLookupRepository.save(new UserLookupEntity(event.getUserId()));
+        userLookupRepository.save(
+                new UserLookupEntity(
+                        event.getUserId(),
+                        event.getEmail(),
+                        event.getPhoneNumber()
+                )
+        );
     }
 }

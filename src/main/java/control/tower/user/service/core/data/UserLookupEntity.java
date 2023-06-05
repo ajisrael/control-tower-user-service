@@ -22,4 +22,8 @@ public class UserLookupEntity implements Serializable {
     @Id
     @Column(unique = true)
     private String userId;
+    @Column(unique = true)
+    private String email;
+    @Column(unique = true)
+    private String phoneNumber;
 }
