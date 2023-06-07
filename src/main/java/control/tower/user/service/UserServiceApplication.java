@@ -27,7 +27,7 @@ public class UserServiceApplication {
 
 	@Autowired
 	public void configure(EventProcessingConfigurer configurer) {
-		configurer.registerListenerInvocationErrorHandler("inventory-item-group",
+		configurer.registerListenerInvocationErrorHandler("user-group",
 				configuration -> new UserServiceEventsErrorHandler());
 	}
 }

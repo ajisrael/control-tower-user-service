@@ -12,7 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 @Component
-@ProcessingGroup("inventory-item-group")
+@ProcessingGroup("user-group")
 public class UserEventsHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEventsHandler.class);
