@@ -1,6 +1,6 @@
 package control.tower.user.service.command.rest;
 
-import control.tower.user.service.command.CreateUserCommand;
+import control.tower.user.service.command.commands.CreateUserCommand;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

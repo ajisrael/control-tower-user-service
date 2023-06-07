@@ -1,5 +1,6 @@
 package control.tower.user.service.command;
 
+import control.tower.user.service.command.commands.CreateUserCommand;
 import control.tower.user.service.core.events.UserCreatedEvent;
 import control.tower.user.service.core.models.UserRole;
 import lombok.Getter;
@@ -9,8 +10,6 @@ import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
-
-import static control.tower.user.service.core.utils.Helper.isNullOrBlank;
 
 @Aggregate
 @NoArgsConstructor
@@ -27,7 +26,7 @@ public class UserAggregate {
 
     @CommandHandler
     public UserAggregate(CreateUserCommand command) {
-        validateCreateUserCommand(command);
+        command.validate();
 
         UserCreatedEvent event = UserCreatedEvent.builder()
                 .userId(command.getUserId())
@@ -49,31 +48,5 @@ public class UserAggregate {
         this.email = event.getEmail();
         this.phoneNumber = event.getPhoneNumber();
         this.userRole = event.getUserRole();
-    }
-
-    private void validateCreateUserCommand(CreateUserCommand command) {
-        if (isNullOrBlank(command.getUserId())) {
-            throw new IllegalArgumentException("UserId cannot be empty");
-        }
-
-        if (isNullOrBlank(command.getFirstName())) {
-            throw new IllegalArgumentException("First name cannot be empty");
-        }
-
-        if (isNullOrBlank(command.getLastName())) {
-            throw new IllegalArgumentException("Last name cannot be empty");
-        }
-
-        if (isNullOrBlank(command.getEmail())) {
-            throw new IllegalArgumentException("Email cannot be empty");
-        }
-
-        if (isNullOrBlank(command.getPhoneNumber())) {
-            throw new IllegalArgumentException("Phone number cannot be empty");
-        }
-
-        if (command.getUserRole() == null) {
-            throw new IllegalArgumentException("User role cannot be null");
-        }
     }
 }

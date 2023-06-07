@@ -1,6 +1,6 @@
 package control.tower.user.service.command.interceptors;
 
-import control.tower.user.service.command.CreateUserCommand;
+import control.tower.user.service.command.commands.CreateUserCommand;
 import control.tower.user.service.core.data.UserLookupEntity;
 import control.tower.user.service.core.data.UserLookupRepository;
 import org.axonframework.commandhandling.CommandMessage;

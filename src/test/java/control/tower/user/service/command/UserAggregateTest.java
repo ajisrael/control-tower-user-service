@@ -1,5 +1,6 @@
 package control.tower.user.service.command;
 
+import control.tower.user.service.command.commands.CreateUserCommand;
 import control.tower.user.service.core.events.UserCreatedEvent;
 import control.tower.user.service.core.models.UserRole;
 import org.axonframework.test.aggregate.AggregateTestFixture;
