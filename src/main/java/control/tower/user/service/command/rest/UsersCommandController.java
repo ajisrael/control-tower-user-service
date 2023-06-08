@@ -1,8 +1,10 @@
 package control.tower.user.service.command.rest;
 
 import control.tower.user.service.command.commands.CreateUserCommand;
+import control.tower.user.service.command.commands.RemoveUserCommand;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,15 @@ public class UsersCommandController {
                 .build();
 
         return commandGateway.sendAndWait(createUserCommand);
+    }
+
+    @DeleteMapping
+    public String removeUser(@Valid @RequestBody RemoveUserRestModel removeUserRestModel) {
+        RemoveUserCommand removeUserCommand = RemoveUserCommand.builder()
+                .userId(removeUserRestModel.getUserId())
+                .build();
+
+        return commandGateway.sendAndWait(removeUserCommand);
     }
 }
 
