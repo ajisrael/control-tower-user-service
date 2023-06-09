@@ -1,7 +1,7 @@
 package control.tower.user.service.query.rest;
 
 import control.tower.user.service.core.data.UserEntity;
-import control.tower.user.service.query.FindAllUsersQuery;
+import control.tower.user.service.query.queries.FindAllUsersQuery;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.beans.factory.annotation.Autowired;
