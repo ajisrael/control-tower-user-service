@@ -24,7 +24,6 @@ public class UsersQueryHandler {
     @QueryHandler
     public UserEntity findUser(FindUserQuery query) {
         return userRepository.findById(query.getUserId()).orElseThrow(
-                () -> new IllegalStateException(String.format("User %s does not exist", query.getUserId()))
-        );
+                () -> new IllegalStateException(String.format("User %s does not exist", query.getUserId())));
     }
 }
