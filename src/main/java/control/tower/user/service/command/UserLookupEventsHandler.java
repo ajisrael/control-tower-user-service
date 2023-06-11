@@ -9,7 +9,8 @@ import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 
-import static control.tower.core.utils.Helper.throwErrorIfEntityDoesNotExist;
+import static control.tower.core.utils.Helper.throwExceptionIfEntityDoesNotExist;
+import static control.tower.user.service.core.constants.ExceptionMessages.USER_WITH_ID_DOES_NOT_EXIST;
 
 @Component
 @AllArgsConstructor
@@ -32,7 +33,7 @@ public class UserLookupEventsHandler {
     @EventHandler
     public void on(UserRemovedEvent event) {
         UserLookupEntity userLookupEntity = userLookupRepository.findByUserId(event.getUserId());
-        throwErrorIfEntityDoesNotExist(userLookupEntity, String.format("User %s does not exist", event.getUserId()));
+        throwExceptionIfEntityDoesNotExist(userLookupEntity, String.format(USER_WITH_ID_DOES_NOT_EXIST, event.getUserId()));
         userLookupRepository.delete(userLookupEntity);
     }
 }

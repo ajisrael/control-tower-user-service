@@ -12,7 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-import static control.tower.core.utils.Helper.throwErrorIfEntityDoesNotExist;
+import static control.tower.core.utils.Helper.throwExceptionIfEntityDoesNotExist;
+import static control.tower.user.service.core.constants.ExceptionMessages.USER_WITH_ID_DOES_NOT_EXIST;
 
 @Component
 @ProcessingGroup("user-group")
@@ -46,7 +47,7 @@ public class UserEventsHandler {
     @EventHandler
     public void on(UserRemovedEvent event) {
         UserEntity userEntity = userRepository.findByUserId(event.getUserId());
-        throwErrorIfEntityDoesNotExist(userEntity, String.format("User %s does not exist", event.getUserId()));
+        throwExceptionIfEntityDoesNotExist(userEntity, String.format(USER_WITH_ID_DOES_NOT_EXIST, event.getUserId()));
         userRepository.delete(userEntity);
     }
 }

@@ -22,9 +22,7 @@ public class UsersQueryController {
 
     @GetMapping
     public List<UserRestModel> getUsers() {
-        FindAllUsersQuery findAllUsersQuery = new FindAllUsersQuery();
-
-        List<UserEntity> userEntities = queryGateway.query(findAllUsersQuery,
+        List<UserEntity> userEntities = queryGateway.query(new FindAllUsersQuery(),
                 ResponseTypes.multipleInstancesOf(UserEntity.class)).join();
 
         return convertUserEntitiesToUserRestModels(userEntities);

@@ -12,6 +12,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import static control.tower.core.constants.LogMessages.INTERCEPTED_COMMAND;
+import static control.tower.core.utils.Helper.throwExceptionIfEntityDoesExist;
+import static control.tower.user.service.core.constants.ExceptionMessages.USER_WITH_ID_EMAIL_OR_PHONE_NUMBER_ALREADY_EXISTS;
+
 @Component
 public class CreateUserCommandInterceptor implements MessageDispatchInterceptor<CommandMessage<?>> {
 
@@ -28,21 +32,20 @@ public class CreateUserCommandInterceptor implements MessageDispatchInterceptor<
             List<? extends CommandMessage<?>> messages) {
         return (index, command) -> {
 
-            LOGGER.info("Intercepted command: " + command.getPayloadType());
-
             if (CreateUserCommand.class.equals(command.getPayloadType())) {
+                LOGGER.info(String.format(INTERCEPTED_COMMAND, command.getPayloadType()));
 
                 CreateUserCommand createUserCommand = (CreateUserCommand) command.getPayload();
 
-                UserLookupEntity userLookupEntity = userLookupRepository.findByUserIdOrEmailOrPhoneNumber(
-                        createUserCommand.getUserId(), createUserCommand.getEmail(), createUserCommand.getPhoneNumber());
+                String userId = createUserCommand.getUserId();
+                String email = createUserCommand.getEmail();
+                String phoneNumber = createUserCommand.getPhoneNumber();
 
-                if (userLookupEntity != null) {
-                    throw new IllegalStateException(
-                            String.format("User with id %s, email %s, or phone number %s, already exists",
-                                    createUserCommand.getUserId(), createUserCommand.getEmail(), createUserCommand.getPhoneNumber())
-                    );
-                }
+                UserLookupEntity userLookupEntity = userLookupRepository.findByUserIdOrEmailOrPhoneNumber(
+                        userId, email, phoneNumber);
+
+                throwExceptionIfEntityDoesExist(userLookupEntity,
+                        String.format(USER_WITH_ID_EMAIL_OR_PHONE_NUMBER_ALREADY_EXISTS, userId, email, phoneNumber));
             }
 
             return command;

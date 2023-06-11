@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static control.tower.user.service.core.constants.ExceptionMessages.USER_WITH_ID_DOES_NOT_EXIST;
+
 @Component
 @AllArgsConstructor
 public class UsersQueryHandler {
@@ -24,6 +26,6 @@ public class UsersQueryHandler {
     @QueryHandler
     public UserEntity findUser(FindUserQuery query) {
         return userRepository.findById(query.getUserId()).orElseThrow(
-                () -> new IllegalStateException(String.format("User %s does not exist", query.getUserId())));
+                () -> new IllegalStateException(String.format(USER_WITH_ID_DOES_NOT_EXIST, query.getUserId())));
     }
 }

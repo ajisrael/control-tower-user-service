@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-import static control.tower.core.utils.Helper.isNullOrBlank;
+import static control.tower.core.utils.Helper.*;
+import static control.tower.user.service.core.constants.ExceptionMessages.*;
 
 @Getter
 @Builder
@@ -20,28 +21,11 @@ public class CreateUserCommand {
     private UserRole userRole;
 
     public void validate() {
-        if (isNullOrBlank(this.getUserId())) {
-            throw new IllegalArgumentException("UserId cannot be empty");
-        }
-
-        if (isNullOrBlank(this.getFirstName())) {
-            throw new IllegalArgumentException("First name cannot be empty");
-        }
-
-        if (isNullOrBlank(this.getLastName())) {
-            throw new IllegalArgumentException("Last name cannot be empty");
-        }
-
-        if (isNullOrBlank(this.getEmail())) {
-            throw new IllegalArgumentException("Email cannot be empty");
-        }
-
-        if (isNullOrBlank(this.getPhoneNumber())) {
-            throw new IllegalArgumentException("Phone number cannot be empty");
-        }
-
-        if (this.getUserRole() == null) {
-            throw new IllegalArgumentException("User role cannot be null");
-        }
+        throwExceptionIfParameterIsEmpty(this.getUserId(), USER_ID_CANNOT_BE_EMPTY);
+        throwExceptionIfParameterIsEmpty(this.getFirstName(), FIRST_NAME_CANNOT_BE_EMPTY);
+        throwExceptionIfParameterIsEmpty(this.getLastName(), LAST_NAME_CANNOT_BE_EMPTY);
+        throwExceptionIfParameterIsEmpty(this.getEmail(), EMAIL_CANNOT_BE_EMPTY);
+        throwExceptionIfParameterIsEmpty(this.getPhoneNumber(), PHONE_NUMBER_CANNOT_BE_EMPTY);
+        throwExceptionIfParameterIsNull(this.getUserRole(), USER_ROLE_CANNOT_BE_NULL);
     }
 }
