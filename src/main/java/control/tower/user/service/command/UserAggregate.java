@@ -28,8 +28,6 @@ public class UserAggregate {
 
     @CommandHandler
     public UserAggregate(CreateUserCommand command) {
-        command.validate();
-
         UserCreatedEvent event = UserCreatedEvent.builder()
                 .userId(command.getUserId())
                 .firstName(command.getFirstName())
@@ -44,8 +42,6 @@ public class UserAggregate {
 
     @CommandHandler
     public void handle(RemoveUserCommand command) {
-        command.validate();
-
         UserRemovedEvent event = UserRemovedEvent.builder()
                 .userId(command.getUserId())
                 .email(email)

@@ -37,6 +37,8 @@ public class RemoveUserCommandInterceptor implements MessageDispatchInterceptor<
 
                 RemoveUserCommand removeUserCommand = (RemoveUserCommand) command.getPayload();
 
+                removeUserCommand.validate();
+
                 UserLookupEntity userLookupEntity = userLookupRepository.findByUserId(removeUserCommand.getUserId());
 
                 throwExceptionIfEntityDoesNotExist(userLookupEntity,

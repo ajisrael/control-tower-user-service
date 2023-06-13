@@ -37,6 +37,8 @@ public class CreateUserCommandInterceptor implements MessageDispatchInterceptor<
 
                 CreateUserCommand createUserCommand = (CreateUserCommand) command.getPayload();
 
+                createUserCommand.validate();
+
                 String userId = createUserCommand.getUserId();
                 String email = createUserCommand.getEmail();
                 String phoneNumber = createUserCommand.getPhoneNumber();
