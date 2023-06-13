@@ -1,6 +1,7 @@
 package control.tower.user.service;
 
 import control.tower.user.service.command.interceptors.CreateUserCommandInterceptor;
+import control.tower.user.service.command.interceptors.RemoveUserCommandInterceptor;
 import control.tower.user.service.core.errorhandling.UserServiceEventsErrorHandler;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.config.EventProcessingConfigurer;
@@ -19,9 +20,12 @@ public class UserServiceApplication {
 	}
 
 	@Autowired
-	public void registerCreateUserCommandInterceptor(ApplicationContext context, CommandBus commandBus) {
+	public void registerUserCommandInterceptors(ApplicationContext context, CommandBus commandBus) {
 		commandBus.registerDispatchInterceptor(
 				context.getBean(CreateUserCommandInterceptor.class)
+		);
+		commandBus.registerDispatchInterceptor(
+				context.getBean(RemoveUserCommandInterceptor.class)
 		);
 	}
 
