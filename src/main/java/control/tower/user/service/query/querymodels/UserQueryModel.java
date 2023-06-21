@@ -1,4 +1,4 @@
-package control.tower.user.service.query.rest;
+package control.tower.user.service.query.querymodels;
 
 import control.tower.user.service.core.models.UserRole;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserRestModel {
+public class UserQueryModel {
 
     private String userId;
     private String firstName;

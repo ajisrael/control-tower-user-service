@@ -1,8 +1,8 @@
 package control.tower.user.service.query.rest;
 
-import control.tower.user.service.core.data.UserEntity;
 import control.tower.user.service.query.queries.FindAllUsersQuery;
 import control.tower.user.service.query.queries.FindUserQuery;
+import control.tower.user.service.query.querymodels.UserQueryModel;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,40 +20,14 @@ public class UsersQueryController {
     QueryGateway queryGateway;
 
     @GetMapping
-    public List<UserRestModel> getUsers() {
-        List<UserEntity> userEntities = queryGateway.query(new FindAllUsersQuery(),
-                ResponseTypes.multipleInstancesOf(UserEntity.class)).join();
-
-        return convertUserEntitiesToUserRestModels(userEntities);
+    public List<UserQueryModel> getUsers() {
+        return queryGateway.query(new FindAllUsersQuery(),
+                ResponseTypes.multipleInstancesOf(UserQueryModel.class)).join();
     }
 
     @GetMapping(params = "userId")
-    public UserRestModel getUser(String userId) {
-        UserEntity userEntity = queryGateway.query(new FindUserQuery(userId),
-                ResponseTypes.instanceOf(UserEntity.class)).join();
-
-        return convertUserEntityToUserRestModel(userEntity);
-    }
-
-    private List<UserRestModel> convertUserEntitiesToUserRestModels(
-            List<UserEntity> userEntities) {
-        List<UserRestModel> userRestModels = new ArrayList<>();
-
-        for (UserEntity userEntity : userEntities) {
-            userRestModels.add(convertUserEntityToUserRestModel(userEntity));
-        }
-
-        return userRestModels;
-    }
-
-    private UserRestModel convertUserEntityToUserRestModel(UserEntity userEntity) {
-        return new UserRestModel(
-                userEntity.getUserId(),
-                userEntity.getFirstName(),
-                userEntity.getLastName(),
-                userEntity.getEmail(),
-                userEntity.getPhoneNumber(),
-                userEntity.getUserRole()
-        );
+    public UserQueryModel getUser(String userId) {
+        return queryGateway.query(new FindUserQuery(userId),
+                ResponseTypes.instanceOf(UserQueryModel.class)).join();
     }
 }
