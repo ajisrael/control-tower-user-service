@@ -1,5 +1,6 @@
 package control.tower.user.service;
 
+import control.tower.core.config.XStreamConfig;
 import control.tower.user.service.command.interceptors.CreateUserCommandInterceptor;
 import control.tower.user.service.command.interceptors.RemoveUserCommandInterceptor;
 import control.tower.user.service.core.errorhandling.UserServiceEventsErrorHandler;
@@ -10,9 +11,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Import;
 
 @EnableDiscoveryClient
 @SpringBootApplication
+@Import({ XStreamConfig.class })
 public class UserServiceApplication {
 
 	public static void main(String[] args) {
