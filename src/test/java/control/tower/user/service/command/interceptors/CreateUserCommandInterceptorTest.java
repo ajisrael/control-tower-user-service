@@ -52,18 +52,20 @@ class CreateUserCommandInterceptorTest {
     @Test
     void testHandle_DuplicateProductId_ThrowsException() {
         String userId = "userId";
+        String email = "email";
+        String phoneNumber = "phoneNumber";
         CreateUserCommand duplicateCommand = CreateUserCommand.builder()
                 .userId(userId)
                 .firstName("firstName")
                 .lastName("lastName")
-                .email("email")
-                .phoneNumber("phoneNumber")
+                .email(email)
+                .phoneNumber(phoneNumber)
                 .userRole(UserRole.CUSTOMER)
                 .build();
 
         CommandMessage<CreateUserCommand> commandMessage = new GenericCommandMessage<>(duplicateCommand);
 
-        UserLookupEntity existingEntity = new UserLookupEntity(userId);
+        UserLookupEntity existingEntity = new UserLookupEntity(userId, email, phoneNumber);
         when(lookupRepository.findByUserId(userId)).thenReturn(existingEntity);
 
         BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> result = interceptor.handle(List.of(commandMessage));
