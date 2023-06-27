@@ -1,5 +1,6 @@
 package control.tower.user.service.query;
 
+import control.tower.core.query.queries.DoesUserExistQuery;
 import control.tower.user.service.core.data.UserEntity;
 import control.tower.user.service.core.data.UserRepository;
 import control.tower.user.service.query.queries.FindAllUsersQuery;
@@ -31,6 +32,11 @@ public class UsersQueryHandler {
         UserEntity userEntity = userRepository.findById(query.getUserId()).orElseThrow(
                 () -> new IllegalStateException(String.format(USER_WITH_ID_DOES_NOT_EXIST, query.getUserId())));
         return convertUserEntityToUserQueryModel(userEntity);
+    }
+
+    @QueryHandler
+    public boolean doesUserExist(DoesUserExistQuery query) {
+        return userRepository.findById(query.getUserId()).isPresent();
     }
 
     private List<UserQueryModel> convertUserEntitiesToUserQueryModels(
