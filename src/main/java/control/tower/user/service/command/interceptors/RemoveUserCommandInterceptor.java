@@ -24,7 +24,8 @@ import java.util.function.BiFunction;
 
 import static control.tower.core.constants.LogMessages.INTERCEPTED_COMMAND;
 import static control.tower.core.utils.Helper.throwExceptionIfEntityDoesNotExist;
-import static control.tower.user.service.core.constants.ExceptionMessages.USER_WITH_ID_DOES_NOT_EXIST;
+import static control.tower.user.service.core.constants.ExceptionMessages.*;
+import static control.tower.user.service.core.constants.LogMessages.*;
 
 @Component
 public class RemoveUserCommandInterceptor implements MessageDispatchInterceptor<CommandMessage<?>> {
@@ -72,7 +73,7 @@ public class RemoveUserCommandInterceptor implements MessageDispatchInterceptor<
     }
 
     private void removeAddressesForUser(String userId) {
-        LOGGER.info("Fetching findAllAddressesForUserQuery");
+        LOGGER.info(FETCHING_FIND_ALL_ADDRESSES_FOR_USER_QUERY);
 
         List<AddressQueryModel> addressQueryModels = queryGateway.query(new FindAllAddressesForUserQuery(userId),
                 ResponseTypes.multipleInstancesOf(AddressQueryModel.class)).join();
@@ -80,7 +81,7 @@ public class RemoveUserCommandInterceptor implements MessageDispatchInterceptor<
         for (AddressQueryModel addressQueryModel: addressQueryModels) {
             String addressId = addressQueryModel.getAddressId();
 
-            LOGGER.info("Issuing remove address command for address: " + addressId);
+            LOGGER.info(String.format(ISSUING_REMOVE_ADDRESS_COMMAND_FOR_ADDRESS_WITH_ID, addressId));
 
             RemoveAddressCommand removeAddressCommand = RemoveAddressCommand.builder()
                     .addressId(addressId)
@@ -88,15 +89,15 @@ public class RemoveUserCommandInterceptor implements MessageDispatchInterceptor<
 
             commandGateway.send(removeAddressCommand, (commandMessage, commandResultMessage) -> {
                 if (commandResultMessage.isExceptional()) {
-                    LOGGER.error("Exception encountered when issuing remove address command for address id: " + addressId);
-                    throw new IllegalStateException("Failed to remove address " + addressId + ", cancelling remove user command");
+                    LOGGER.error(String.format(EXCEPTION_ENCOUNTERED_WHEN_ISSUING_REMOVE_ADDRESS_COMMAND_FOR_ADDRESS_WITH_ID, addressId));
+                    throw new IllegalStateException(String.format(FAILED_TO_REMOVE_ADDRESS_WITH_ID_CANCELLING_REMOVE_USER_COMMAND, addressId));
                 }
             });
         }
     }
 
     private void removePaymentMethodsForUser(String userId) {
-        LOGGER.info("Fetching findAllPaymentMethodsForUserQuery");
+        LOGGER.info(FETCHING_FIND_ALL_PAYMENT_METHODS_FOR_USER_QUERY);
 
         List<PaymentMethodQueryModel> paymentMethodQueryModels = queryGateway.query(new FindAllPaymentMethodsForUserQuery(userId),
                 ResponseTypes.multipleInstancesOf(PaymentMethodQueryModel.class)).join();
@@ -104,7 +105,7 @@ public class RemoveUserCommandInterceptor implements MessageDispatchInterceptor<
         for (PaymentMethodQueryModel paymentMethodQueryModel: paymentMethodQueryModels) {
             String paymentId = paymentMethodQueryModel.getPaymentId();
 
-            LOGGER.info("Issuing remove payment method command for payment method: " + paymentId);
+            LOGGER.info(String.format(ISSUING_REMOVE_PAYMENT_METHOD_COMMAND_FOR_PAYMENT_METHOD_WITH_ID, paymentId));
 
             RemovePaymentMethodCommand removePaymentMethodCommand = RemovePaymentMethodCommand.builder()
                     .paymentId(paymentId)
@@ -112,8 +113,8 @@ public class RemoveUserCommandInterceptor implements MessageDispatchInterceptor<
 
             commandGateway.send(removePaymentMethodCommand, (commandMessage, commandResultMessage) -> {
                 if (commandResultMessage.isExceptional()) {
-                    LOGGER.error("Exception encountered when issuing remove payment method command for payment method id: " + paymentId);
-                    throw new IllegalStateException("Failed to remove payment method " + paymentId + ", cancelling remove user command");
+                    LOGGER.error(String.format(EXCEPTION_ENCOUNTERED_WHEN_ISSUING_REMOVE_PAYMENT_METHOD_COMMAND_FOR_PAYMENT_METHOD_WITH_ID, paymentId));
+                    throw new IllegalStateException(String.format(FAILED_TO_REMOVE_PAYMENT_METHOD_WITH_ID_CANCELLING_REMOVE_USER_COMMAND, paymentId));
                 }
             });
         }

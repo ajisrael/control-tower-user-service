@@ -19,4 +19,6 @@ public class ExceptionMessages {
     public static final String USER_WITH_ID_EMAIL_OR_PHONE_NUMBER_ALREADY_EXISTS =
             String.format(ENTITY_WITH_ID_ALREADY_EXISTS, USER, "%s, email %s, or phone number %s,");
     public static final String USER_WITH_ID_DOES_NOT_EXIST = String.format(ENTITY_WITH_ID_DOES_NOT_EXIST, USER, "%s");
+    public static final String FAILED_TO_REMOVE_ADDRESS_WITH_ID_CANCELLING_REMOVE_USER_COMMAND = "Failed to remove address %s, cancelling remove user command";
+    public static final String FAILED_TO_REMOVE_PAYMENT_METHOD_WITH_ID_CANCELLING_REMOVE_USER_COMMAND = "Failed to remove payment method %s, cancelling remove user command";
 }
