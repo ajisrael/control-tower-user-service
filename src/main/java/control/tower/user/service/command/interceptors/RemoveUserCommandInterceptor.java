@@ -63,21 +63,42 @@ public class RemoveUserCommandInterceptor implements MessageDispatchInterceptor<
                 throwExceptionIfEntityDoesNotExist(userLookupEntity,
                         String.format(USER_WITH_ID_DOES_NOT_EXIST, userId));
 
-                removeAddressesForUser(userId);
+                List<AddressQueryModel> addressesForUser = getAddressesForUser(userId);
 
-                removePaymentMethodsForUser(userId);
+                List<PaymentMethodQueryModel> paymentMethodsForUser = getPaymentMethodsForUser(userId);
+
+                // TODO: If an exception is encountered in removing addresses or payment methods catch it and issue
+                //       command to start retry saga for x number of times and raise notification event if unable
+                //       to resolve automatically
+
+                removeAddressesForUser(addressesForUser);
+
+                removePaymentMethodsForUser(paymentMethodsForUser);
             }
 
             return command;
         };
     }
 
-    private void removeAddressesForUser(String userId) {
+    private List<AddressQueryModel> getAddressesForUser(String userId) {
         LOGGER.info(FETCHING_FIND_ALL_ADDRESSES_FOR_USER_QUERY);
 
-        List<AddressQueryModel> addressQueryModels = queryGateway.query(new FindAllAddressesForUserQuery(userId),
-                ResponseTypes.multipleInstancesOf(AddressQueryModel.class)).join();
+        FindAllAddressesForUserQuery findAllAddressesForUserQuery = FindAllAddressesForUserQuery.builder()
+                .userId(userId)
+                .build();
 
+        return queryGateway.query(findAllAddressesForUserQuery,
+                ResponseTypes.multipleInstancesOf(AddressQueryModel.class)).join();
+    }
+
+    private List<PaymentMethodQueryModel> getPaymentMethodsForUser(String userId) {
+        LOGGER.info(FETCHING_FIND_ALL_PAYMENT_METHODS_FOR_USER_QUERY);
+
+        return queryGateway.query(new FindAllPaymentMethodsForUserQuery(userId),
+                ResponseTypes.multipleInstancesOf(PaymentMethodQueryModel.class)).join();
+    }
+
+    private void removeAddressesForUser(List<AddressQueryModel> addressQueryModels) {
         for (AddressQueryModel addressQueryModel: addressQueryModels) {
             String addressId = addressQueryModel.getAddressId();
 
@@ -96,12 +117,7 @@ public class RemoveUserCommandInterceptor implements MessageDispatchInterceptor<
         }
     }
 
-    private void removePaymentMethodsForUser(String userId) {
-        LOGGER.info(FETCHING_FIND_ALL_PAYMENT_METHODS_FOR_USER_QUERY);
-
-        List<PaymentMethodQueryModel> paymentMethodQueryModels = queryGateway.query(new FindAllPaymentMethodsForUserQuery(userId),
-                ResponseTypes.multipleInstancesOf(PaymentMethodQueryModel.class)).join();
-
+    private void removePaymentMethodsForUser(List<PaymentMethodQueryModel> paymentMethodQueryModels) {
         for (PaymentMethodQueryModel paymentMethodQueryModel: paymentMethodQueryModels) {
             String paymentId = paymentMethodQueryModel.getPaymentId();
 
