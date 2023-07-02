@@ -21,23 +21,23 @@ public class UsersCommandController {
     private CommandGateway commandGateway;
 
     @PostMapping
-    public String createUser(@Valid @RequestBody CreateUserRestModel createUserRestModel) {
+    public String createUser(@Valid @RequestBody CreateUserRequestModel createUserRequestModel) {
         CreateUserCommand createUserCommand = CreateUserCommand.builder()
                 .userId(UUID.randomUUID().toString())
-                .firstName(createUserRestModel.getFirstName())
-                .lastName(createUserRestModel.getLastName())
-                .email(createUserRestModel.getEmail())
-                .phoneNumber(createUserRestModel.getPhoneNumber())
-                .userRole(createUserRestModel.getUserRole())
+                .firstName(createUserRequestModel.getFirstName())
+                .lastName(createUserRequestModel.getLastName())
+                .email(createUserRequestModel.getEmail())
+                .phoneNumber(createUserRequestModel.getPhoneNumber())
+                .userRole(createUserRequestModel.getUserRole())
                 .build();
 
         return commandGateway.sendAndWait(createUserCommand);
     }
 
     @DeleteMapping
-    public String removeUser(@Valid @RequestBody RemoveUserRestModel removeUserRestModel) {
+    public String removeUser(@Valid @RequestBody RemoveUserRequestModel removeUserRequestModel) {
         RemoveUserCommand removeUserCommand = RemoveUserCommand.builder()
-                .userId(removeUserRestModel.getUserId())
+                .userId(removeUserRequestModel.getUserId())
                 .build();
 
         return commandGateway.sendAndWait(removeUserCommand);

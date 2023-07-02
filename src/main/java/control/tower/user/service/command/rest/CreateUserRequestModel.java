@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
-public class CreateUserRestModel {
+public class CreateUserRequestModel {
 
     @NotBlank(message = "First name is a required field")
     private String firstName;
