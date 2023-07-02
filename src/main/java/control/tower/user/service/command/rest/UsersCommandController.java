@@ -4,6 +4,7 @@ import control.tower.user.service.command.commands.CreateUserCommand;
 import control.tower.user.service.command.commands.RemoveUserCommand;
 import control.tower.user.service.command.rest.requests.CreateUserRequestModel;
 import control.tower.user.service.command.rest.requests.RemoveUserRequestModel;
+import control.tower.user.service.command.rest.responses.UserCreatedResponseModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -26,7 +27,7 @@ public class UsersCommandController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create user")
-    public String createUser(@Valid @RequestBody CreateUserRequestModel createUserRequestModel) {
+    public UserCreatedResponseModel createUser(@Valid @RequestBody CreateUserRequestModel createUserRequestModel) {
         CreateUserCommand createUserCommand = CreateUserCommand.builder()
                 .userId(UUID.randomUUID().toString())
                 .firstName(createUserRequestModel.getFirstName())
@@ -36,7 +37,9 @@ public class UsersCommandController {
                 .userRole(createUserRequestModel.getUserRole())
                 .build();
 
-        return commandGateway.sendAndWait(createUserCommand);
+        String userId = commandGateway.sendAndWait(createUserCommand);
+
+        return UserCreatedResponseModel.builder().userId(userId).build();
     }
 
     @DeleteMapping
