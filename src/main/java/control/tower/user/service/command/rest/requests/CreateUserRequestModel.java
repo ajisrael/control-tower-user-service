@@ -1,4 +1,4 @@
-package control.tower.user.service.command.rest;
+package control.tower.user.service.command.rest.requests;
 
 import control.tower.user.service.core.models.UserRole;
 import lombok.Getter;

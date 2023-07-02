@@ -2,6 +2,8 @@ package control.tower.user.service.command.rest;
 
 import control.tower.user.service.command.commands.CreateUserCommand;
 import control.tower.user.service.command.commands.RemoveUserCommand;
+import control.tower.user.service.command.rest.requests.CreateUserRequestModel;
+import control.tower.user.service.command.rest.requests.RemoveUserRequestModel;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
