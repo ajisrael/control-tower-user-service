@@ -94,7 +94,11 @@ public class RemoveUserCommandInterceptor implements MessageDispatchInterceptor<
     private List<PaymentMethodQueryModel> getPaymentMethodsForUser(String userId) {
         LOGGER.info(FETCHING_FIND_ALL_PAYMENT_METHODS_FOR_USER_QUERY);
 
-        return queryGateway.query(new FindAllPaymentMethodsForUserQuery(userId),
+        FindAllPaymentMethodsForUserQuery findAllPaymentMethodsForUserQuery = FindAllPaymentMethodsForUserQuery.builder()
+                .userId(userId)
+                .build();
+
+        return queryGateway.query(findAllPaymentMethodsForUserQuery,
                 ResponseTypes.multipleInstancesOf(PaymentMethodQueryModel.class)).join();
     }
 
