@@ -8,6 +8,7 @@ import control.tower.user.service.query.queries.FindUserQuery;
 import control.tower.user.service.query.querymodels.UserQueryModel;
 import lombok.AllArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ public class UsersQueryHandler {
     private final UserRepository userRepository;
 
     @QueryHandler
-    public List<UserQueryModel> findAllUsers(FindAllUsersQuery query) {
-        List<UserEntity> userEntities = userRepository.findAll();
-        return convertUserEntitiesToUserQueryModels(userEntities);
+    public Page<UserQueryModel> findAllUsers(FindAllUsersQuery query) {
+        return userRepository.findAll(query.getPageable())
+                .map(this::convertUserEntityToUserQueryModel);
     }
 
     @QueryHandler
@@ -37,17 +38,6 @@ public class UsersQueryHandler {
     @QueryHandler
     public boolean doesUserExist(DoesUserExistQuery query) {
         return userRepository.findById(query.getUserId()).isPresent();
-    }
-
-    private List<UserQueryModel> convertUserEntitiesToUserQueryModels(
-            List<UserEntity> userEntities) {
-        List<UserQueryModel> userQueryModels = new ArrayList<>();
-
-        for (UserEntity userEntity : userEntities) {
-            userQueryModels.add(convertUserEntityToUserQueryModel(userEntity));
-        }
-
-        return userQueryModels;
     }
 
     private UserQueryModel convertUserEntityToUserQueryModel(UserEntity userEntity) {

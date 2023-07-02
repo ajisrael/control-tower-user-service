@@ -1,4 +1,10 @@
 package control.tower.user.service.query.queries;
 
-public class FindAllUsersQuery {
+import control.tower.core.query.queries.PageableQuery;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
+
+@Getter
+@SuperBuilder
+public class FindAllUsersQuery extends PageableQuery {
 }

@@ -1,5 +1,8 @@
 package control.tower.user.service.query.rest;
 
+import control.tower.core.rest.PageResponseType;
+import control.tower.core.rest.PaginationResponse;
+import control.tower.core.utils.PaginationUtility;
 import control.tower.user.service.query.queries.FindAllUsersQuery;
 import control.tower.user.service.query.queries.FindUserQuery;
 import control.tower.user.service.query.querymodels.UserQueryModel;
@@ -12,6 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import static control.tower.core.constants.DomainConstants.DEFAULT_PAGE;
+import static control.tower.core.constants.DomainConstants.DEFAULT_PAGE_SIZE;
 
 @RestController
 @RequestMapping("/users")
@@ -25,17 +32,23 @@ public class UsersQueryController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get users")
-    public List<UserQueryModel> getUsers() {
-        return queryGateway.query(new FindAllUsersQuery(),
-                ResponseTypes.multipleInstancesOf(UserQueryModel.class)).join();
+    public CompletableFuture<PaginationResponse<UserQueryModel>> getUsers(
+            @RequestParam(defaultValue = DEFAULT_PAGE) int currentPage,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+        FindAllUsersQuery findAllUsersQuery = FindAllUsersQuery.builder()
+                .pageable(PaginationUtility.buildPageable(currentPage, pageSize))
+                .build();
+
+        return queryGateway.query(findAllUsersQuery, new PageResponseType<>(UserQueryModel.class))
+                .thenApply(PaginationUtility::toPageResponse);
     }
 
     @GetMapping(params = "userId")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get user by id")
-    public UserQueryModel getUser(String userId) {
+    public CompletableFuture<UserQueryModel> getUser(String userId) {
         return queryGateway.query(new FindUserQuery(userId),
-                ResponseTypes.instanceOf(UserQueryModel.class)).join();
+                ResponseTypes.instanceOf(UserQueryModel.class));
     }
 }
